@@ -30,7 +30,10 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    testIdAttribute: 'data-test',
+    baseURL: 'https://practicesoftwaretesting.com',
   },
+   
 
   /* Configure projects for major browsers */
   projects: [
@@ -48,6 +51,8 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+
+    
 
     /* Test against mobile viewports. */
     // {
