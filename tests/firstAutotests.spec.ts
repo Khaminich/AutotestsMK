@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+
 test('Verify login with valid credentials', async ({ page }) => {
   await page.goto('https://practicesoftwaretesting.com/auth/login');
 
@@ -10,73 +11,73 @@ test('Verify login with valid credentials', async ({ page }) => {
 
   await expect(page).toHaveURL('https://practicesoftwaretesting.com/account');
 
-  const MyAcc = page.locator('[data-test="page-title"]');
-  await expect(MyAcc).toContainText("My account");
+  const myAcc = page.getByTestId('page-title');
+  await expect(myAcc).toContainText("My account");
 
-  const userName = page.locator('[data-test="nav-menu"]');
+  const userName = page.getByTestId('nav-menu');
   await expect(userName).toContainText('Jane Doe');
 
 });
 
 test('Verify user can view product details', async ({ page }) => {
-  await page.goto('https://practicesoftwaretesting.com');
+  await page.goto('/');
 
   await page.getByText('Combination Pliers').click()
   await expect(page.url()).toContain('https://practicesoftwaretesting.com/product');
 
-  const ProductName = page.locator('[data-test="product-name"]');
-  await expect(ProductName).toContainText("Combination Pliers");
+  const productName = page.getByTestId('product-name');
+  await expect(productName).toContainText("Combination Pliers");
 
-  const ProductPrice = page.locator('[data-test="unit-price"]');
-  await expect(ProductPrice).toContainText("14.15");
+  const productPrice = page.getByTestId('unit-price');
+  await expect(productPrice).toContainText("14.15");
 
-  const AddToCart = page.locator('[data-test="add-to-cart"]');
-  await expect(AddToCart).toBeVisible();
+  const addToCart = page.getByTestId('add-to-cart');
+  await expect(addToCart).toBeVisible();
 
-  const AddToFavorites = page.locator('[data-test="add-to-favorites"]');
+  const AddToFavorites = page.getByTestId('add-to-favorites');
   await expect(AddToFavorites).toBeVisible();
 
 });
 
 test('Verify user can add product to cart', async ({ page }) => {
-  await page.goto('https://practicesoftwaretesting.com');
+  await page.goto('/');
 
   //Assert1
-  await page.getByText('Slip Joint Pliers').click()
+  await page.getByTestId('product-name').filter({ hasText: 'Slip Joint Pliers' }).click();
   await expect(page.url()).toContain('https://practicesoftwaretesting.com/product');
 
-  const ProductName = page.locator('[data-test="product-name"]');
-  await expect(ProductName).toContainText("Slip Joint Pliers");
+  const productName = page.getByTestId('product-name');
+  await expect(productName).toContainText("Slip Joint Pliers");
 
-  const ProductPrice = page.locator('[data-test="unit-price"]');
-  await expect(ProductPrice).toContainText("9.17");
+  const productPrice = page.getByTestId('unit-price');
+  await expect(productPrice).toContainText("9.17");
 
 
 
   //Assert2
-  await page.locator('[data-test="add-to-cart"]').click()
+  await page.getByTestId('add-to-cart').click()
 
   const alert = page.getByRole('alert', { name: 'Product added to shopping' });
   await expect(alert).toBeVisible();
   await expect(alert).toContainText("Product added to shopping cart");
   await expect(alert).toBeHidden({ timeout: 8000 });
 
-  const CartIcon = page.locator('[data-test="nav-cart"]');
-  await expect (CartIcon).toContainText('1');
+  const cartIcon = page.getByTestId('nav-cart');
+  await expect (cartIcon).toContainText('1');
 
 
   //Assert3
-  await page.locator('[data-test="nav-cart"]').click();
+  await page.getByTestId('nav-cart').click();
   await expect(page).toHaveURL('https://practicesoftwaretesting.com/checkout');
 
-  const ProductQuantity = page.locator('[data-test="product-quantity"]');
-  await expect(ProductQuantity).toHaveCount(1);
+  const productQuantity = page.getByTestId('product-quantity');
+  await expect(productQuantity).toHaveCount(1);
   
 
-  const ProductTitle = page.locator('.col-md-4');
-  await expect(ProductTitle).toContainText('Slip Joint Pliers');
+  const productTitle = page.getByTestId('product-title');
+  await expect(productTitle).toContainText('Slip Joint Pliers');
 
-  const ProceedButton = page.locator('[data-test="proceed-1"]');
-  await expect(ProceedButton).toBeVisible();
+  const proceedButton = page.getByTestId('proceed-1');
+  await expect(proceedButton).toBeVisible();
 
 });
