@@ -2,22 +2,24 @@ import { test, expect } from '@playwright/test';
 import { HomePage, Category } from '../pages/HomePage';
 import { ProductsSortFragment } from '../pages/fragments/ProductsSortFragment';
 
-// Test 1 & 2: Verify user can perform sorting by name (asc & desc)
-test.describe('Product Sorting', () => {
-  const sortOptions = [
-    { label: 'Name (A - Z)', ascending: true },
-    { label: 'Name (Z - A)', ascending: false }
-  ];
 
-  for (const option of sortOptions) {
-    test(`should sort products by name: ${option.label}`, async ({ page }) => {
+
+
+// Test 1 & 2: Verify user can perform sorting by name (asc & desc)
+const sortOptions = [
+  { label: 'Name (A - Z)', ascending: true },
+  { label: 'Name (Z - A)', ascending: false }
+];
+
+test.describe('Product Sorting by Name', () => {
+  for (const { label, ascending } of sortOptions) {
+    test(`should sort products by name: ${label}`, async ({ page }) => {
       const homePage = new HomePage(page);
       const sortFragment = new ProductsSortFragment(page);
 
       await homePage.open();
-      await sortFragment.selectSortOption(option.label);
+      await sortFragment.selectSortOption(label);
 
-  
       const productNameLocators = await page.locator('[data-testid="product-name"]').all();
       await Promise.all(productNameLocators.map(el => el.waitFor({ state: 'visible' })));
 
@@ -25,13 +27,14 @@ test.describe('Product Sorting', () => {
       const cleanedNames = productNames.map(name => name?.trim() || '');
 
       const sortedNames = [...cleanedNames].sort((a, b) =>
-        option.ascending ? a.localeCompare(b) : b.localeCompare(a)
+        ascending ? a.localeCompare(b) : b.localeCompare(a)
       );
 
       expect(cleanedNames).toEqual(sortedNames);
     });
   }
 });
+
 
 // Test 3 & 4: Verify user can perform sorting by price (asc & desc)
 test.describe('Sorting by Price', () => {
@@ -76,3 +79,4 @@ test('Verify user can filter products by category', async ({ page }) => {
     expect(name).toContain('Sander');
   }
 });
+
